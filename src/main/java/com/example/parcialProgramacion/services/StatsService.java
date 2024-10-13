@@ -1,12 +1,9 @@
 package com.example.parcialProgramacion.services;
 
-import com.example.parcialProgramacion.domain.dto.DnaAllDto;
 import com.example.parcialProgramacion.domain.dto.StatsAllDto;
-import com.example.parcialProgramacion.domain.entities.DnaEntity;
 import com.example.parcialProgramacion.domain.entities.StatsEntity;
 import com.example.parcialProgramacion.repositories.StatsRepository;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,8 +12,11 @@ import java.util.Optional;
 @Service
 public class StatsService {
 
-    @Autowired
-    private StatsRepository statsRepository;
+    private final StatsRepository statsRepository;
+
+    public StatsService(StatsRepository statsRepository) {
+        this.statsRepository = statsRepository;
+    }
 
     @Transactional
     public StatsEntity save(StatsEntity statsEntity) {

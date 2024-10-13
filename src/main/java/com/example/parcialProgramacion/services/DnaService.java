@@ -4,10 +4,8 @@ import com.example.parcialProgramacion.domain.dto.DnaAllDto;
 import com.example.parcialProgramacion.domain.dto.DnaShortDto;
 import com.example.parcialProgramacion.domain.entities.DnaEntity;
 import com.example.parcialProgramacion.domain.entities.MutantResult;
-import com.example.parcialProgramacion.domain.entities.StatsEntity;
 import com.example.parcialProgramacion.repositories.DnaRepository;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,11 +13,14 @@ import java.util.List;
 @Service
 public class DnaService {
 
-    @Autowired
-    private DnaRepository dnaRepository;
+    private final DnaRepository dnaRepository;
 
-    @Autowired
-    private StatsService statsService;
+    private final StatsService statsService;
+
+    public DnaService(DnaRepository dnaRepository, StatsService statsService) {
+        this.dnaRepository = dnaRepository;
+        this.statsService = statsService;
+    }
 
     // Metodo para buscar una entidad por ID
     public DnaEntity findById(Long id) {
@@ -136,43 +137,6 @@ public class DnaService {
         // Devolver ambos contadores
         return new MutantResult(isADnaMutant, countDnaMutant, countDnaHuman);
     }
-
-/*
-    // Metodo que combina la verificación y guardado de ADN
-    public DnaEntity processAndSave(DnaAllDto dnaAllDto) {
-        // Obtener el ADN
-        String[] dna = dnaAllDto.getDna();
-        MutantResult result = isMutant(dna);
-
-        // Validar longitud de las secuencias (mínimo 4 caracteres por secuencia)
-        for (String sequence : dna) {
-            if (sequence.length() < 4) {
-                throw new IllegalArgumentException("Cada secuencia de ADN debe tener al menos 4 caracteres.");
-            }
-        }
-
-        // Validar que solo se utilicen los caracteres permitidos (A, T, C, G)
-        String validChars = "ATCG";
-        for (String sequence : dna) {
-            String upperSequence = sequence.toUpperCase();
-            if (!upperSequence.chars().allMatch(c -> validChars.indexOf(c) != -1)) {
-                throw new IllegalArgumentException("Las secuencias de ADN solo pueden contener los caracteres A, T, C y G.");
-            }
-        }
-
-        // Crear entidad DNA y asignar si es mutante
-        DnaEntity dnaEntity = convertToEntity(dnaAllDto);
-        dnaEntity.setIsMutant(result.getIsADnaMutant());
-
-        // Guardar en la base de datos el ADN
-        DnaEntity savedEntity = dnaRepository.save(dnaEntity);
-
-        // Crear una nueva entidad de Stats por cada ingreso
-        statsService.updateStats(result.getCountDnaMutant(), result.getCountDnaHuman());
-
-        return savedEntity;
-    }
-*/
 
     public DnaEntity processAndSave(DnaAllDto dnaAllDto) {
         // Obtener el ADN

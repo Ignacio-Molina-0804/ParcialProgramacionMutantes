@@ -4,7 +4,6 @@ import com.example.parcialProgramacion.domain.dto.DnaAllDto;
 import com.example.parcialProgramacion.domain.dto.DnaShortDto;
 import com.example.parcialProgramacion.domain.entities.DnaEntity;
 import com.example.parcialProgramacion.services.DnaService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,8 +15,11 @@ import java.util.List;
 @RequestMapping("/mutant")
 public class DnaController {
 
-    @Autowired
-    private DnaService dnaService;
+    private final DnaService dnaService;
+
+    public DnaController(DnaService dnaService) {
+        this.dnaService = dnaService;
+    }
 
     @GetMapping("/all")
     public ResponseEntity<List<DnaEntity>> getAllDna() {

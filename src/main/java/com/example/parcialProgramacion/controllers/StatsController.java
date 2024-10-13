@@ -3,7 +3,6 @@ package com.example.parcialProgramacion.controllers;
 import com.example.parcialProgramacion.domain.dto.StatsAllDto;
 import com.example.parcialProgramacion.domain.entities.StatsEntity;
 import com.example.parcialProgramacion.services.StatsService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,8 +15,11 @@ import java.util.List;
 @RestController
 public class StatsController {
 
-    @Autowired
-    private StatsService statsService;
+    private final StatsService statsService;
+
+    public StatsController(StatsService statsService) {
+        this.statsService = statsService;
+    }
 
     @GetMapping("/all")
     public ResponseEntity<List<StatsEntity>> getAllStats() {
